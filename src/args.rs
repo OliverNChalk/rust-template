@@ -4,7 +4,7 @@ use clap::{Parser, ValueHint};
 
 #[derive(Debug, Parser)]
 #[command(version = toolbox::version!(), long_version = toolbox::long_version!())]
-pub(crate) struct Opts {
+pub(crate) struct Args {
     /// Arguments for your app.
     #[clap(long, value_hint = ValueHint::Url, default_value = "tcp://127.0.0.1:1337")]
     pub(crate) important_value: String,

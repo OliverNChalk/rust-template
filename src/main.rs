@@ -1,4 +1,4 @@
-mod opts;
+mod args;
 
 use clap::{CommandFactory, Parser};
 use tracing::{error, info};
@@ -6,13 +6,13 @@ use tracing::{error, info};
 #[tokio::main]
 async fn main() {
     // Parse command-line arguments.
-    let opts = crate::opts::Opts::parse();
+    let opts = crate::args::Args::parse();
 
     // If user is requesting completions, return them and exit.
     if let Some(shell) = opts.completions {
         clap_complete::generate(
             shell,
-            &mut crate::opts::Opts::command(),
+            &mut crate::args::Args::command(),
             "rust-template",
             &mut std::io::stdout(),
         );
