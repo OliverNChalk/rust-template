@@ -6,11 +6,11 @@ edition = "2021"
 readme = "README.md"
 
 [lints.clippy]
-cast_possible_truncation = 'warn'
-cast_possible_wrap = 'warn'
-cast_sign_loss = 'warn'
+cast_possible_truncation = "warn"
+cast_possible_wrap = "warn"
+cast_sign_loss = "warn"
 # See `clippy.toml`.
-disallowed_methods = 'warn'
+disallowed_methods = "warn"
 
 [dependencies]
 clap = { version = "4.2.7", features = ["derive"] }
