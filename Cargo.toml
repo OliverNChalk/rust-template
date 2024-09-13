@@ -1,9 +1,10 @@
 [package]
 name = "rust-template"
 version = "0.1.0"
-authors = ["Oliver Chalk"]
 edition = "2021"
 readme = "README.md"
+authors = ["Oliver Chalk"]
+license = "MIT OR Apache-2.0"
 
 [lints.clippy]
 pedantic = "warn"
