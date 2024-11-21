@@ -21,7 +21,7 @@ async fn main() {
     }
 
     // Setup tracing.
-    let _log_guard = toolbox::tracing::setup_tracing(opts.logs.as_deref());
+    let _log_guard = toolbox::tracing::setup_tracing("rust-template", opts.logs.as_deref());
 
     // Setup Continuum standard panic handling.
     let default_panic = std::panic::take_hook();
