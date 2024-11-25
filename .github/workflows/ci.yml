@@ -17,15 +17,41 @@ jobs:
         with:
           concurrent_skipping: "same_content_newer"
 
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo $GITHUB_WORKSPACE
+        shell: bash
+      - run: echo $INPUT_REPOSITORY
+        shell: bash
+      - run: echo $INPUT_PATH
+        shell: bash
+      - run: echo $INPUT_REF
+        shell: bash
+      - run: env
+        shell: bash
+
   check:
     needs: skip-duplicates
     if: needs.skip-duplicates.outputs.should_skip != 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        env:
+          ci_read: ${{ secrets.CI_READ }}
+        if: ${{ env.ci_read != '' }}
+        with:
+          token: ${{ env.ci_read }}
+          submodules: recursive
+      - uses: actions/checkout@v3
+        env:
+          ci_read: ${{ secrets.CI_READ }}
+        if: ${{ env.ci_read == '' }}
         with:
           submodules: recursive
       - uses: ./.github/workflows/actions/rust-toolchain
+        with:
+          token: ${{ secrets.CI_READ }}
       - run: cargo check --all-features
 
   test:
@@ -34,9 +60,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        env:
+          ci_read: ${{ secrets.CI_READ }}
+        if: ${{ env.ci_read != '' }}
+        with:
+          token: ${{ env.ci_read }}
+          submodules: recursive
+      - uses: actions/checkout@v3
+        env:
+          ci_read: ${{ secrets.CI_READ }}
+        if: ${{ env.ci_read == '' }}
         with:
           submodules: recursive
       - uses: ./.github/workflows/actions/rust-toolchain
+        with:
+          token: ${{ secrets.CI_READ }}
       - run: cargo test --all-features
 
   fmt:
@@ -45,10 +83,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        env:
+          ci_read: ${{ secrets.CI_READ }}
+        if: ${{ env.ci_read != '' }}
+        with:
+          token: ${{ env.ci_read }}
+          submodules: recursive
+      - uses: actions/checkout@v3
+        env:
+          ci_read: ${{ secrets.CI_READ }}
+        if: ${{ env.ci_read == '' }}
         with:
           submodules: recursive
       - uses: ./.github/workflows/actions/rust-toolchain
         with:
+          token: ${{ secrets.CI_READ }}
           toolchain: nightly
       - run: rustup component add rustfmt
       - run: cargo fmt --all --check
@@ -59,9 +108,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        env:
+          ci_read: ${{ secrets.CI_READ }}
+        if: ${{ env.ci_read != '' }}
+        with:
+          token: ${{ env.ci_read }}
+          submodules: recursive
+      - uses: actions/checkout@v3
+        env:
+          ci_read: ${{ secrets.CI_READ }}
+        if: ${{ env.ci_read == '' }}
         with:
           submodules: recursive
       - uses: ./.github/workflows/actions/rust-toolchain
+        with:
+          token: ${{ secrets.CI_READ }}
       - run: rustup component add clippy
       - run: cargo clippy --all-features -- --deny warnings
 
@@ -71,7 +132,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        env:
+          ci_read: ${{ secrets.CI_READ }}
+        if: ${{ env.ci_read != '' }}
+        with:
+          token: ${{ env.ci_read }}
+          submodules: recursive
+      - uses: actions/checkout@v3
+        env:
+          ci_read: ${{ secrets.CI_READ }}
+        if: ${{ env.ci_read == '' }}
         with:
           submodules: recursive
       - uses: ./.github/workflows/actions/rust-toolchain
+        with:
+          token: ${{ secrets.CI_READ }}
       - run: cargo doc --all-features --no-deps
