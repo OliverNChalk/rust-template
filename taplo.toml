@@ -4,7 +4,7 @@ array_auto_expand = true
 allowed_blank_lines = 1
 
 [[rule]]
-keys = ["dependencies", "dev-dependencies", "build-dependencies", "toolchain", "workspace.dependencies"]
+keys = ["lints.clippy", "dependencies", "dev-dependencies", "build-dependencies", "toolchain", "workspace.dependencies"]
 
 [rule.formatting]
 reorder_keys = true
