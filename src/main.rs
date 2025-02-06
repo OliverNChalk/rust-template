@@ -1,10 +1,10 @@
 mod args;
 
-use clap::{CommandFactory, Parser};
-use tracing::{error, info};
-
 #[tokio::main]
 async fn main() {
+    use clap::{CommandFactory, Parser};
+    use tracing::{error, info};
+
     // Parse command-line arguments.
     let opts = crate::args::Args::parse();
 
