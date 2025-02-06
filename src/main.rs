@@ -6,10 +6,10 @@ async fn main() {
     use tracing::{error, info};
 
     // Parse command-line arguments.
-    let opts = crate::args::Args::parse();
+    let args = crate::args::Args::parse();
 
     // If user is requesting completions, return them and exit.
-    if let Some(shell) = opts.completions {
+    if let Some(shell) = args.completions {
         clap_complete::generate(
             shell,
             &mut crate::args::Args::command(),
@@ -21,9 +21,9 @@ async fn main() {
     }
 
     // Setup tracing.
-    let _log_guard = toolbox::tracing::setup_tracing("rust-template", opts.logs.as_deref());
+    let _log_guard = toolbox::tracing::setup_tracing("rust-template", args.logs.as_deref());
 
-    // Setup Continuum standard panic handling.
+    // Setup standard panic handling.
     let default_panic = std::panic::take_hook();
     std::panic::set_hook(Box::new(move |panic_info| {
         error!(?panic_info, "Application panic");
