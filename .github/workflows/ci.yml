@@ -1,3 +1,4 @@
+---
 name: ci-rust-push
 
 on:

@@ -1,3 +1,4 @@
+---
 name: rust-toolchain
 description: "Sets up a standard rust toolchain"
 inputs:
@@ -18,12 +19,9 @@ runs:
         DEFAULT_TOOLCHAIN=$(grep channel rust-toolchain.toml | awk '{print $3}' | sed 's/"//g')
         TOOLCHAIN=${USER_OVERRIDE:-$DEFAULT_TOOLCHAIN}
         echo "toolchain=$TOOLCHAIN" >> $GITHUB_OUTPUT
-
-    - uses: actions-rs/toolchain@v1
+    - uses: dtolnay/rust-toolchain@stable
       with:
-        profile: minimal
         toolchain: ${{ steps.get-toolchain.outputs.toolchain }}
-        override: true
     - uses: Swatinem/rust-cache@v2.0.0
       with:
         shared-key: ${{ steps.get-toolchain.outputs.toolchain }}
@@ -31,5 +29,8 @@ runs:
       if: ${{ inputs.token != null }}
       shell: bash
     - run: git config --global url."https://${{ inputs.token }}@github.com/".insteadOf "git@github.com:"
+      if: ${{ inputs.token != null }}
+      shell: bash
+    - run: git config --global url."https://${{ inputs.token }}@github.com".insteadOf "ssh://git@github.com"
       if: ${{ inputs.token != null }}
       shell: bash
