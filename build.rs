@@ -1,11 +1,27 @@
+use vergen_git2::{CargoBuilder, Emitter, Git2Builder, RustcBuilder};
+
 fn main() {
-    vergen::EmitBuilder::builder()
-        .git_sha(true)
-        .git_commit_message()
-        .git_commit_timestamp()
-        .rustc_semver()
-        .rustc_host_triple()
-        .cargo_target_triple()
+    let git2 = Git2Builder::default()
+        .sha(true)
+        .dirty(true)
+        .commit_message(true)
+        .commit_timestamp(true)
+        .build()
+        .unwrap();
+    let rustc = RustcBuilder::default()
+        .host_triple(true)
+        .semver(true)
+        .build()
+        .unwrap();
+    let cargo = CargoBuilder::default().target_triple(true).build().unwrap();
+
+    Emitter::default()
+        .add_instructions(&git2)
+        .unwrap()
+        .add_instructions(&rustc)
+        .unwrap()
+        .add_instructions(&cargo)
+        .unwrap()
         .emit()
         .unwrap();
 }
