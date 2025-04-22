@@ -6,6 +6,13 @@ async fn main() {
     use tokio::signal::unix::SignalKind;
     use tracing::{error, info};
 
+    // Parse .env if it exists (and before args in case args want to read
+    // environment).
+    match dotenvy::dotenv() {
+        Ok(_) | Err(dotenvy::Error::Io(_)) => {}
+        Err(err) => panic!("Failed to parse .env file; err={err}"),
+    }
+
     // Parse command-line arguments.
     let args = crate::args::Args::parse();
 
@@ -24,6 +31,9 @@ async fn main() {
     // Setup tracing.
     let _log_guard = toolbox::tracing::setup_tracing("rust-template", args.logs.as_deref());
 
+    // Log build information (as soon as possible).
+    toolbox::log_build_info!();
+
     // Setup standard panic handling.
     let default_panic = std::panic::take_hook();
     std::panic::set_hook(Box::new(move |panic_info| {
@@ -31,15 +41,6 @@ async fn main() {
 
         default_panic(panic_info);
     }));
-
-    // Parse .env if it exists.
-    match dotenvy::dotenv() {
-        Ok(_) | Err(dotenvy::Error::Io(_)) => {}
-        Err(err) => panic!("Failed to parse .env file; err={err}"),
-    }
-
-    // Log build information.
-    toolbox::log_build_info!();
 
     // Start server.
     let cxl = tokio_util::sync::CancellationToken::new();
