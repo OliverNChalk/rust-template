@@ -3,6 +3,7 @@ mod args;
 #[tokio::main]
 async fn main() {
     use clap::{CommandFactory, Parser};
+    use tokio::signal::unix::SignalKind;
     use tracing::{error, info};
 
     // Parse command-line arguments.
@@ -45,7 +46,9 @@ async fn main() {
     let cxl_child = cxl.clone();
     let mut handle = tokio::spawn(async move { cxl_child.cancelled().await });
 
-    // Wait for server exit or SIGINT.
+    // Wait for server exit or SIGTERM/SIGINT.
+    let mut sigterm = tokio::signal::unix::signal(SignalKind::terminate()).unwrap();
+    let mut sigint = tokio::signal::unix::signal(SignalKind::interrupt()).unwrap();
     tokio::select! {
         res = tokio::signal::ctrl_c() => {
             res.expect("Failed to register SIGINT hook");
@@ -55,6 +58,8 @@ async fn main() {
 
             handle.await.unwrap();
         }
+        _ = sigterm.recv() => info!("SIGTERM caught, stopping server"),
+        _ = sigint.recv() => info!("SIGINT caught, stopping server"),
         res = &mut handle => {
             res.unwrap();
         }
