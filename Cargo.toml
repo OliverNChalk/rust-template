@@ -8,6 +8,7 @@ license = "MIT OR Apache-2.0"
 
 [workspace.lints.clippy]
 cast_possible_truncation = "allow"
+cast_possible_wrap = "allow"
 cast_precision_loss = "allow"
 cast_sign_loss = "allow"
 # See `clippy.toml`.
