@@ -7,10 +7,10 @@ authors = ["Oliver Chalk"]
 license = "MIT OR Apache-2.0"
 
 [workspace.lints.clippy]
-# See `clippy.toml`.
 cast_possible_truncation = "allow"
 cast_precision_loss = "allow"
 cast_sign_loss = "allow"
+# See `clippy.toml`.
 disallowed_methods = "warn"
 get_first = "allow"
 inline-always = "allow"
@@ -23,6 +23,7 @@ needless-raw-string-hashes = "allow"
 pedantic = { level = "warn", priority = -1 }
 similar_names = "allow"
 single_match_else = "allow"
+struct_excessive_bools = "allow"
 todo = "warn"
 too_many_lines = "allow"
 trivially_copy_pass_by_ref = "warn"
