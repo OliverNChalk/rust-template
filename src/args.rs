@@ -5,9 +5,9 @@ use clap::{Parser, ValueHint};
 #[derive(Debug, Parser)]
 #[command(version = toolbox::version!(), long_version = toolbox::long_version!())]
 pub(crate) struct Args {
-    /// Arguments for your app.
-    #[clap(long, value_hint = ValueHint::Url, default_value = "tcp://127.0.0.1:1337")]
-    pub(crate) important_value: String,
+    /// Path to config file.
+    #[clap(long, value_hint = ValueHint::FilePath)]
+    pub(crate) config: PathBuf,
     /// Generate completions for provided shell.
     #[arg(long, value_name = "SHELL")]
     pub(crate) completions: Option<clap_complete::Shell>,

@@ -1,10 +1,12 @@
 mod args;
+mod config;
+mod control_thread;
+mod worker_thread;
 
-#[tokio::main]
-async fn main() {
+fn main() -> Result<(), Box<dyn std::any::Any + Send>> {
     use clap::{CommandFactory, Parser};
-    use tokio::signal::unix::SignalKind;
-    use tracing::{error, info};
+    use control_thread::ControlThread;
+    use tracing::error;
 
     // Parse .env if it exists (and before args in case args want to read
     // environment).
@@ -25,7 +27,7 @@ async fn main() {
             &mut std::io::stdout(),
         );
 
-        return;
+        return Ok(());
     }
 
     // Setup tracing.
@@ -42,27 +44,9 @@ async fn main() {
         default_panic(panic_info);
     }));
 
+    // Parse config.
+    let config = serde_yaml::from_slice(&toolbox::fs::must_read(&args.config)).unwrap();
+
     // Start server.
-    let cxl = tokio_util::sync::CancellationToken::new();
-    let cxl_child = cxl.clone();
-    let mut handle = tokio::spawn(async move { cxl_child.cancelled().await });
-
-    // Wait for server exit or SIGTERM/SIGINT.
-    let mut sigterm = tokio::signal::unix::signal(SignalKind::terminate()).unwrap();
-    let mut sigint = tokio::signal::unix::signal(SignalKind::interrupt()).unwrap();
-    tokio::select! {
-        res = tokio::signal::ctrl_c() => {
-            res.expect("Failed to register SIGINT hook");
-
-            info!("SIGINT caught, stopping server");
-            cxl.cancel();
-
-            handle.await.unwrap();
-        }
-        _ = sigterm.recv() => info!("SIGTERM caught, stopping server"),
-        _ = sigint.recv() => info!("SIGINT caught, stopping server"),
-        res = &mut handle => {
-            res.unwrap();
-        }
-    }
+    ControlThread::run_in_place(config)
 }
