@@ -73,6 +73,8 @@ impl ControlThread {
         let mut sigint = tokio::signal::unix::signal(SignalKind::interrupt()).unwrap();
 
         let mut exit = tokio::select! {
+            () = self.shutdown.cancelled() => Ok(()),
+
             _ = sigterm.recv() => {
                 info!("SIGTERM caught, stopping server");
 
