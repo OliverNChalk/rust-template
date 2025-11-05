@@ -3,7 +3,7 @@ mod config;
 mod control_thread;
 mod worker_thread;
 
-fn main() -> Result<(), Box<dyn std::any::Any + Send>> {
+fn main() -> std::thread::Result<()> {
     use clap::{CommandFactory, Parser};
     use control_thread::ControlThread;
     use tracing::error;

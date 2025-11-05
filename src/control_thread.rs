@@ -1,4 +1,3 @@
-use std::any::Any;
 use std::time::Duration;
 
 use futures::StreamExt;
@@ -14,11 +13,11 @@ use crate::worker_thread::WorkerThread;
 
 pub(crate) struct ControlThread {
     shutdown: Shutdown,
-    threads: FuturesUnordered<NamedTask<Result<(), Box<dyn Any + Send>>>>,
+    threads: FuturesUnordered<NamedTask<std::thread::Result<()>>>,
 }
 
 impl ControlThread {
-    pub(crate) fn run_in_place(config: Config) -> Result<(), Box<dyn Any + Send>> {
+    pub(crate) fn run_in_place(config: Config) -> std::thread::Result<()> {
         let runtime = tokio::runtime::Builder::new_current_thread()
             .enable_all()
             .build()
@@ -68,7 +67,7 @@ impl ControlThread {
         ControlThread { shutdown, threads }
     }
 
-    async fn run(mut self) -> Result<(), Box<dyn Any + Send>> {
+    async fn run(mut self) -> std::thread::Result<()> {
         let mut sigterm = tokio::signal::unix::signal(SignalKind::terminate()).unwrap();
         let mut sigint = tokio::signal::unix::signal(SignalKind::interrupt()).unwrap();
 
