@@ -41,7 +41,6 @@ metrics-nats-exporter = { git = "https://github.com/OliverNChalk/metrics-nats-ex
 serde = { version = "1.0.226", features = ["derive"] }
 serde_yaml = "0.9.34"
 tokio = { version = "1.28.2", features = ["full"] }
-tokio-util = "0.7.10"
 toolbox = { git = "https://github.com/OliverNChalk/toolbox-rs.git", version = "0.2.0", features = [
   "named_task",
   "shutdown",
@@ -51,7 +50,7 @@ toolbox = { git = "https://github.com/OliverNChalk/toolbox-rs.git", version = "0
 tracing = "0.1.41"
 
 [build-dependencies]
-vergen-git2 = { version = "1.0.7", features = ["rustc", "cargo"] }
+vergen-git2 = { version = "1.0.7", features = ["cargo", "rustc"] }
 
 [profile.release]
 opt-level = 3
@@ -61,6 +60,10 @@ debug = true
 inherits = "release"
 overflow-checks = true
 debug-assertions = true
+
+[profile.paranoid.package."*"]
+overflow-checks = false
+debug-assertions = false
 
 [profile.performance]
 inherits = "release"
