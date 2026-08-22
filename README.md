@@ -6,8 +6,27 @@ libraries that you might not need, most notably `tokio` as an async runtime and
 
 ## Getting started
 
-- Configure `Cargo.toml`.
-- Search for "rust-template" & replace as appropriate.
+```sh
+./scripts/init.sh ../my-service
+```
+
+This copies the tracked files into the target directory and renames the
+template to the project name (the basename of the path, or an optional second
+argument). The directory must be empty, though an existing `.git` is fine, so
+it can populate a repo you have already created or cloned.
+
+Creating the repo and the first commit is left to you:
+
+```sh
+cd ../my-service && git init && git add -A && git commit -m "chore: init"
+```
+
+## Development
+
+- `./scripts/validate.sh` — clippy, tests, unused deps, formatting.
+- `./scripts/fix.sh` — apply formatting & drop unused deps.
+
+Both take `-n`/`--nix` to run the underlying tools via `nix develop`.
 
 ## License
 
