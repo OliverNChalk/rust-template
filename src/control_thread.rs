@@ -22,7 +22,7 @@ impl ControlThread {
             .enable_all()
             .build()
             .unwrap();
-        let server = runtime.block_on(ControlThread::setup(&runtime, config));
+        let server = runtime.block_on(Self::setup(&runtime, config));
 
         runtime.block_on(server.run())
     }
@@ -35,7 +35,7 @@ impl ControlThread {
         let nats_client = Box::leak(Box::new(
             metrics_nats_exporter::async_nats::connect(config.nats_servers)
                 .await
-                .expect("NATS Client Connect"),
+                .unwrap(),
         ));
         threads.push(
             metrics_nats_exporter::install(
@@ -64,7 +64,7 @@ impl ControlThread {
             })
             .collect();
 
-        ControlThread { shutdown, threads }
+        Self { shutdown, threads }
     }
 
     async fn run(mut self) -> std::thread::Result<()> {

@@ -16,7 +16,7 @@ impl WorkerThread {
                     .build()
                     .unwrap();
 
-                rt.block_on(WorkerThread { shutdown }.run());
+                rt.block_on(Self { shutdown }.run());
             })
             .unwrap()
     }
