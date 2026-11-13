@@ -67,6 +67,7 @@ find "$DEST_ABS" -type f -exec sed -i \
     -e "s/rust-template/$NAME/g" \
     -e "s/rust_template/$NAME_IDENT/g" \
     {} +
+mv "$DEST_ABS/crates/rust-template" "$DEST_ABS/crates/$NAME"
 
 # The README documents the template itself; replace it with a minimal stub.
 cat >"$DEST_ABS/README.md" <<EOF

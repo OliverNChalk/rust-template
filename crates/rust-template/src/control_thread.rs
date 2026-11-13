@@ -95,8 +95,8 @@ impl ControlThread {
         // Trigger shutdown.
         self.shutdown.shutdown();
 
-        // Wait for all threads to exit, reporting the first error as the ultimate
-        // error.
+        // Wait for all threads to exit, reporting the first error as the
+        // ultimate error.
         while let Some((name, res)) = self.threads.next().await {
             info!(%name, ?res, "Thread exited");
             exit = exit.and(res.unwrap());

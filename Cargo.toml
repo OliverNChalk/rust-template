@@ -1,13 +1,13 @@
-[package]
-name = "rust-template"
+[workspace]
+members = ["crates/*"]
+resolver = "3"
+
+[workspace.package]
 version = "0.1.0"
 edition = "2024"
 readme = "README.md"
 authors = ["Oliver Chalk"]
-license = "MIT OR Apache-2.0"
-
-[lints]
-workspace = true
+license = "UNLICENSED"
 
 [workspace.lints.clippy]
 cast_possible_truncation = "allow"
@@ -45,25 +45,18 @@ use_self = "warn"
 [workspace.lints.rust]
 non_ascii_idents = "warn"
 
-[dependencies]
-clap = { version = "4.2.7", features = ["derive"] }
+[workspace.dependencies]
+clap = "4.2.7"
 clap_complete = "4.3.0"
 dotenvy = "0.15.7"
 futures = "0.3.31"
 metrics-nats-exporter = { git = "https://github.com/OliverNChalk/metrics-nats-exporter" }
-serde = { version = "1.0.226", features = ["derive"] }
+serde = "1.0.226"
 serde_yaml = "0.9.34"
-tokio = { version = "1.28.2", features = ["full"] }
-toolbox = { git = "https://github.com/OliverNChalk/toolbox-rs.git", version = "0.2.0", features = [
-  "named_task",
-  "shutdown",
-  "tracing",
-  "version",
-] }
+tokio = "1.28.2"
+toolbox = { git = "https://github.com/OliverNChalk/toolbox-rs.git", version = "0.2.0" }
 tracing = "0.1.41"
-
-[build-dependencies]
-vergen-git2 = { version = "1.0.7", features = ["cargo", "rustc"] }
+vergen-git2 = "1.0.7"
 
 [profile.release]
 opt-level = 3
